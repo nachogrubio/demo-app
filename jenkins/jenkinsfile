@@ -1,0 +1,32 @@
+pipeline {
+
+agent any
+
+parameters {
+	string(name: 'container_name', defaultValue: 'demoapp')
+	string(name: 'image_name', defaultValue: 'demoapp')
+	string(name: 'image_tag', defaultValue: 'latest')
+	string(name: 'port', defaultValue: '3000')
+}
+
+stages {
+
+	stage('build') {
+		steps {
+			sh '''
+				docker build -t ${image_name}:${image_tag} .
+			'''
+		}
+	}
+
+	stage('run') {
+		steps {
+			sh '''
+				docker run --rm -it -p ${port}:3000 --name ${containter_name} ${image_name}:${image_tag}
+			'''
+		}
+	}
+
+}
+
+}
